@@ -86,3 +86,10 @@ export * as TourKitTypes from './tour-kit/types';
 export { CollapsibleContent } from './collapsible-content';
 export { createOrderedChildren, sortFillsByOrder } from './utils';
 export { WooProductFieldItem as __experimentalWooProductFieldItem } from './woo-product-field-item';
+export {
+	SlotContext,
+	SlotContextPrototype,
+	useSlotContext,
+	SlotContextType,
+	SlotContextHelpersType,
+} from './slot-context';

@@ -1,7 +1,12 @@
 /**
  * External dependencies
  */
-import { Form, FormRef } from '@woocommerce/components';
+import {
+	Form,
+	FormRef,
+	SlotContext,
+	SlotContextPrototype,
+} from '@woocommerce/components';
 import { PartialProduct, Product } from '@woocommerce/data';
 import { Ref } from 'react';
 
@@ -27,58 +32,62 @@ export const ProductForm: React.FC< {
 	formRef?: Ref< FormRef< Partial< Product > > >;
 } > = ( { product, formRef } ) => {
 	return (
-		<Form< Partial< Product > >
-			initialValues={
-				product || {
-					reviews_allowed: true,
-					name: '',
-					sku: '',
-					stock_quantity: 0,
-					stock_status: 'instock',
+		<SlotContext.Provider value={ SlotContextPrototype }>
+			<Form< Partial< Product > >
+				initialValues={
+					product || {
+						reviews_allowed: true,
+						name: '',
+						sku: '',
+						stock_quantity: 0,
+						stock_status: 'instock',
+					}
 				}
-			}
-			ref={ formRef }
-			errors={ {} }
-			validate={ validate }
-		>
-			<ProductFormHeader />
-			<ProductFormLayout>
-				<ProductFormTab name="general" title="General">
-					<ProductDetailsSection />
-					<ImagesSection />
-					<AttributesSection />
-				</ProductFormTab>
-				<ProductFormTab
-					name="pricing"
-					title="Pricing"
-					disabled={ !! product?.variations?.length }
-				>
-					<PricingSection />
-				</ProductFormTab>
-				<ProductFormTab
-					name="inventory"
-					title="Inventory"
-					disabled={ !! product?.variations?.length }
-				>
-					<ProductInventorySection />
-				</ProductFormTab>
-				<ProductFormTab
-					name="shipping"
-					title="Shipping"
-					disabled={ !! product?.variations?.length }
-				>
-					<ProductShippingSection product={ product } />
-				</ProductFormTab>
-				{ window.wcAdminFeatures[ 'product-variation-management' ] ? (
-					<ProductFormTab name="options" title="Options">
-						<OptionsSection />
-						<ProductVariationsSection />
+				ref={ formRef }
+				errors={ {} }
+				validate={ validate }
+			>
+				<ProductFormHeader />
+				<ProductFormLayout>
+					<ProductFormTab name="general" title="General">
+						<ProductDetailsSection />
+						<ImagesSection />
+						<AttributesSection />
 					</ProductFormTab>
-				) : (
-					<></>
-				) }
-			</ProductFormLayout>
-			<ProductFormFooter />
-		</Form>
+					<ProductFormTab
+						name="pricing"
+						title="Pricing"
+						disabled={ !! product?.variations?.length }
+					>
+						<PricingSection />
+					</ProductFormTab>
+					<ProductFormTab
+						name="inventory"
+						title="Inventory"
+						disabled={ !! product?.variations?.length }
+					>
+						<ProductInventorySection />
+					</ProductFormTab>
+					<ProductFormTab
+						name="shipping"
+						title="Shipping"
+						disabled={ !! product?.variations?.length }
+					>
+						<ProductShippingSection product={ product } />
+					</ProductFormTab>
+					{ window.wcAdminFeatures[
+						'product-variation-management'
+					] ? (
+						<ProductFormTab name="options" title="Options">
+							<OptionsSection />
+							<ProductVariationsSection />
+						</ProductFormTab>
+					) : (
+						<></>
+					) }
+				</ProductFormLayout>
+				<ProductFormFooter />
+			</Form>
+		</SlotContext.Provider>
 	);
 };
