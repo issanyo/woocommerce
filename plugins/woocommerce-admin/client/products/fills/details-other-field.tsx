@@ -2,7 +2,10 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { __experimentalWooProductFieldItem as WooProductFieldItem } from '@woocommerce/components';
+import {
+	__experimentalWooProductFieldItem as WooProductFieldItem,
+	SlotContextHelpersType,
+} from '@woocommerce/components';
 import { TextControl } from '@wordpress/components';
 import interpolateComponents from '@automattic/interpolate-components';
 import { registerPlugin } from '@wordpress/plugins';
@@ -42,8 +45,8 @@ registerPlugin( 'wc-admin-product-editor-details-other', {
 			pluginId="test-plugin"
 			order={ 1 }
 		>
-			{ ( { ...props } ) => {
-				const { showFill, hideFill } = props;
+			{ ( { getFills }: SlotContextHelpersType ) => {
+				console.debug( 'getFills() helper', getFills() );
 				return <DetailsOtherField />;
 			} }
 		</WooProductFieldItem>

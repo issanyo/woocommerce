@@ -55,11 +55,7 @@ registerPlugin( 'wc-admin-product-editor-name', {
 			section="details"
 			pluginId="test-plugin"
 		>
-			{ ( {
-				hideFill,
-			}: {
-				hideFill: SlotContextHelpersType[ 'hideFill' ];
-			} ) => {
+			{ ( { hideFill }: SlotContextHelpersType ) => {
 				hideFill( 'test-other-field' );
 				return <DetailsNameField />;
 			} }

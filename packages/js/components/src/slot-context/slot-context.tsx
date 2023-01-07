@@ -14,6 +14,7 @@ type FillCollection = readonly ( readonly JSX.Element[] )[];
 export type SlotContextHelpersType = {
 	hideFill: ( id: string ) => void;
 	showFill: ( id: string ) => void;
+	getFills: () => FillType;
 };
 
 export type SlotContextType = {
@@ -45,10 +46,12 @@ export const SlotContextPrototype: SlotContextType = ( () => {
 		}
 	};
 
+	const getFills = () => ( { ...fills } );
+
 	return {
 		registerFill,
 		getFillHelpers() {
-			return { hideFill, showFill };
+			return { hideFill, showFill, getFills };
 		},
 		filterRegisteredFills( fillsArrays: FillCollection ) {
 			return fillsArrays.filter(
