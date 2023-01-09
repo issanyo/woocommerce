@@ -26,6 +26,7 @@ export const WooProductFieldItem: React.FC< WooProductFieldItemProps > & {
 	Slot: React.FC< Slot.Props & WooProductFieldSlotProps >;
 } = ( { children, order = 1, section, id } ) => {
 	const { registerFill, getFillHelpers } = useSlotContext();
+
 	registerFill( id );
 	return (
 		<Fill name={ `woocommerce_product_field_${ section }` }>

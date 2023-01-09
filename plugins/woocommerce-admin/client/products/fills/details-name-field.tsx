@@ -48,16 +48,44 @@ const DetailsNameField = () => {
 
 registerPlugin( 'wc-admin-product-editor-name', {
 	// @ts-expect-error 'scope' does exist. @types/wordpress__plugins is outdated.
-	scope: 'woocommerce-admin',
+	scope: 'woocommerce-product-editor',
 	render: () => (
 		<WooProductFieldItem
 			id="test-name-field"
 			section="details"
 			pluginId="test-plugin"
 		>
-			{ ( { hideFill }: SlotContextHelpersType ) => {
-				hideFill( 'test-other-field' );
-				return <DetailsNameField />;
+			{ ( { hideFill, showFill, getFills }: SlotContextHelpersType ) => {
+				return (
+					<>
+						<DetailsNameField />
+						<button
+							onClick={ () => {
+								hideFill( 'test-other-field' );
+							} }
+						>
+							Hide other fill
+						</button>
+						&nbsp;
+						<button
+							onClick={ () => {
+								showFill( 'test-other-field' );
+							} }
+						>
+							Show other fill
+						</button>
+						&nbsp;
+						<button
+							onClick={ () => {
+								Object.keys( getFills() ).forEach(
+									( fillName ) => console.debug( fillName )
+								);
+							} }
+						>
+							Log all fills to console
+						</button>
+					</>
+				);
 			} }
 		</WooProductFieldItem>
 	),

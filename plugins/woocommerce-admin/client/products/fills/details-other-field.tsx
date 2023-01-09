@@ -2,10 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import {
-	__experimentalWooProductFieldItem as WooProductFieldItem,
-	SlotContextHelpersType,
-} from '@woocommerce/components';
+import { __experimentalWooProductFieldItem as WooProductFieldItem } from '@woocommerce/components';
 import { TextControl } from '@wordpress/components';
 import interpolateComponents from '@automattic/interpolate-components';
 import { registerPlugin } from '@wordpress/plugins';
@@ -37,7 +34,7 @@ const DetailsOtherField = () => {
 
 registerPlugin( 'wc-admin-product-editor-details-other', {
 	// @ts-expect-error 'scope' does exist. @types/wordpress__plugins is outdated.
-	scope: 'woocommerce-admin',
+	scope: 'woocommerce-product-editor',
 	render: () => (
 		<WooProductFieldItem
 			id="test-other-field"
@@ -45,10 +42,7 @@ registerPlugin( 'wc-admin-product-editor-details-other', {
 			pluginId="test-plugin"
 			order={ 1 }
 		>
-			{ ( { getFills }: SlotContextHelpersType ) => {
-				console.debug( 'getFills() helper', getFills() );
-				return <DetailsOtherField />;
-			} }
+			{ () => <DetailsOtherField /> }
 		</WooProductFieldItem>
 	),
 } );

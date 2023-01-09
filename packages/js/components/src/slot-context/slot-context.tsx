@@ -1,7 +1,12 @@
 /**
  * External dependencies
  */
-import { createElement, createContext, useContext } from '@wordpress/element';
+import {
+	createElement,
+	createContext,
+	useContext,
+	useState,
+} from '@wordpress/element';
 
 type FillConfigType = {
 	visible: boolean;
@@ -24,44 +29,64 @@ export type SlotContextType = {
 	filterRegisteredFills: ( fillsArrays: FillCollection ) => FillCollection;
 };
 
-export const SlotContextPrototype: SlotContextType = ( () => {
-	const fills: FillType = {};
+const SlotContext = createContext< SlotContextType | undefined >( undefined );
+
+export const SlotContextProvider: React.FC = ( { children } ) => {
+	const [ fills, setFills ] = useState< FillType >( {} );
 
 	const registerFill = ( id: string ) => {
 		if ( fills[ id ] ) {
 			return;
 		}
-		fills[ id ] = { visible: true };
+		setFills( { ...fills, [ id ]: { visible: true } } );
 	};
 
 	const hideFill = ( id: string ) => {
 		if ( fills[ id ] ) {
-			fills[ id ].visible = false;
+			setFills( {
+				...fills,
+				[ id ]: { ...fills[ id ], visible: false },
+			} );
 		}
 	};
 
 	const showFill = ( id: string ) => {
 		if ( fills[ id ] ) {
-			fills[ id ].visible = true;
+			setFills( { ...fills, [ id ]: { ...fills[ id ], visible: true } } );
 		}
 	};
 
 	const getFills = () => ( { ...fills } );
 
-	return {
-		registerFill,
-		getFillHelpers() {
-			return { hideFill, showFill, getFills };
-		},
-		filterRegisteredFills( fillsArrays: FillCollection ) {
-			return fillsArrays.filter(
-				( arr ) => fills[ arr[ 0 ].props._id ]?.visible !== false
-			);
-		},
-		fills,
-	};
-} )();
+	return (
+		<SlotContext.Provider
+			value={ {
+				registerFill,
+				getFillHelpers() {
+					return { hideFill, showFill, getFills };
+				},
+				filterRegisteredFills( fillsArrays: FillCollection ) {
+					return fillsArrays.filter(
+						( arr ) =>
+							fills[ arr[ 0 ].props._id ]?.visible !== false
+					);
+				},
+				fills,
+			} }
+		>
+			{ children }
+		</SlotContext.Provider>
+	);
+};
 
-export const SlotContext = createContext( SlotContextPrototype );
+export const useSlotContext = () => {
+	const slotContext = useContext( SlotContext );
 
-export const useSlotContext = () => useContext( SlotContext );
+	if ( slotContext === undefined ) {
+		throw new Error(
+			'useSlotContext must be used within a SlotContextProvider'
+		);
+	}
+
+	return slotContext;
+};

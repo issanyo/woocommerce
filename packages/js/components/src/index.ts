@@ -87,8 +87,7 @@ export { CollapsibleContent } from './collapsible-content';
 export { createOrderedChildren, sortFillsByOrder } from './utils';
 export { WooProductFieldItem as __experimentalWooProductFieldItem } from './woo-product-field-item';
 export {
-	SlotContext,
-	SlotContextPrototype,
+	SlotContextProvider,
 	useSlotContext,
 	SlotContextType,
 	SlotContextHelpersType,

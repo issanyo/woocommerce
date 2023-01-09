@@ -1,14 +1,11 @@
 /**
  * External dependencies
  */
-import {
-	Form,
-	FormRef,
-	SlotContext,
-	SlotContextPrototype,
-} from '@woocommerce/components';
+import { Form, FormRef, SlotContextProvider } from '@woocommerce/components';
+
 import { PartialProduct, Product } from '@woocommerce/data';
 import { Ref } from 'react';
+import { PluginArea } from '@wordpress/plugins';
 
 /**
  * Internal dependencies
@@ -32,7 +29,7 @@ export const ProductForm: React.FC< {
 	formRef?: Ref< FormRef< Partial< Product > > >;
 } > = ( { product, formRef } ) => {
 	return (
-		<SlotContext.Provider value={ SlotContextPrototype }>
+		<SlotContextProvider>
 			<Form< Partial< Product > >
 				initialValues={
 					product || {
@@ -88,6 +85,8 @@ export const ProductForm: React.FC< {
 				</ProductFormLayout>
 				<ProductFormFooter />
 			</Form>
-		</SlotContext.Provider>
+			{ /* @ts-expect-error 'scope' does exist. @types/wordpress__plugins is outdated. */ }
+			<PluginArea scope="woocommerce-product-editor" />
+		</SlotContextProvider>
 	);
 };
