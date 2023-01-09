@@ -5,7 +5,8 @@ import {
 	createElement,
 	createContext,
 	useContext,
-	useState,
+	useCallback,
+	useReducer,
 } from '@wordpress/element';
 
 type FillConfigType = {
@@ -32,31 +33,42 @@ export type SlotContextType = {
 const SlotContext = createContext< SlotContextType | undefined >( undefined );
 
 export const SlotContextProvider: React.FC = ( { children } ) => {
-	const [ fills, setFills ] = useState< FillType >( {} );
+	const [ fills, updateFills ] = useReducer(
+		( data: FillType, updates: FillType ) => ( { ...data, ...updates } ),
+		{}
+	);
 
-	const registerFill = ( id: string ) => {
-		if ( fills[ id ] ) {
-			return;
+	const updateFillConfig = (
+		id: string,
+		update: Partial< FillConfigType >
+	) => {
+		if ( ! fills[ id ] ) {
+			throw new Error( `No fill found with ID: ${ id }` );
 		}
-		setFills( { ...fills, [ id ]: { visible: true } } );
+		updateFills( { [ id ]: { ...fills[ id ], ...update } } );
 	};
 
-	const hideFill = ( id: string ) => {
-		if ( fills[ id ] ) {
-			setFills( {
-				...fills,
-				[ id ]: { ...fills[ id ], visible: false },
-			} );
-		}
-	};
+	const registerFill = useCallback(
+		( id: string ) => {
+			if ( fills[ id ] ) {
+				return;
+			}
+			updateFills( { [ id ]: { visible: true } } );
+		},
+		[ fills ]
+	);
 
-	const showFill = ( id: string ) => {
-		if ( fills[ id ] ) {
-			setFills( { ...fills, [ id ]: { ...fills[ id ], visible: true } } );
-		}
-	};
+	const hideFill = useCallback(
+		( id: string ) => updateFillConfig( id, { visible: false } ),
+		[ fills ]
+	);
 
-	const getFills = () => ( { ...fills } );
+	const showFill = useCallback(
+		( id: string ) => updateFillConfig( id, { visible: true } ),
+		[ fills ]
+	);
+
+	const getFills = useCallback( () => ( { ...fills } ), [ fills ] );
 
 	return (
 		<SlotContext.Provider
